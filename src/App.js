@@ -3,19 +3,11 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, OrbitControls, ContactShadows, Environment } from '@react-three/drei';
 import { proxy, useSnapshot } from 'valtio';
 import { HexColorPicker } from 'react-colorful';
+import { COLORS } from "./constants";
 
 const state = proxy({
   current: null,
-  items: {
-    laces: "#ffffff",
-    mesh: "#ffffff",
-    caps: "#ffffff",
-    inner: "#ffffff",
-    sole: "#ffffff",
-    stripes: "#ffffff",
-    band: "#ffffff",
-    patch: "#ffffff",
-  }
+  items: COLORS[0]
 });
 
 function Shoe() {
@@ -31,6 +23,7 @@ function Shoe() {
       ref.current.rotation.y = Math.sin(t / 4) / 8
       ref.current.position.y = (1 + Math.sin(t / 1.5)) / 10
       ref.current.position.z = 0
+
     })
   
     // Cursor showing current color
@@ -63,7 +56,6 @@ function Shoe() {
 
 function Picker() {
   const snap = useSnapshot(state);
-  console.log(snap.current);
   return(
     <div style={{display: snap.current ? 'block' : 'none'}}>
     <HexColorPicker className="picker" 
@@ -75,7 +67,22 @@ function Picker() {
   )
 }
 
+function changeColor(colors) {
+  const snap = useSnapshot(state);
+  console.log(snap.current);
+  return (
+    <>
+    // {state.items[snap.current] = colors}
+    </>
+  )
+}
 export default function App() {
+  
+  let list = '';
+  for(let i = 0; i < COLORS.length;i++) {
+    list += `<li style="background-color: ${COLORS[i].stripes}" onClick={${changeColor(COLORS[i])}></li>`;
+  }
+  
   return (
     <>
       <Picker />
@@ -89,6 +96,10 @@ export default function App() {
         </Suspense>
         <OrbitControls />
       </Canvas>
+      <div className="color">
+        <ul className="color-list" dangerouslySetInnerHTML={{__html: list}}>
+        </ul>
+      </div>
       
     </>
   )
